@@ -1,8 +1,8 @@
 services:
-  nemotron-ocr-demo:
+  nemotron-ocr-api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./nemotron-ocr-api/Dockerfile
     deploy:
       resources:
         reservations:
@@ -12,6 +12,24 @@ services:
               capabilities: [gpu]
     volumes:
       - ${HOME}/.cache/huggingface:/root/.cache/huggingface
+    environment:
+      - CUDA_VISIBLE_DEVICES=1
     ports:
-      - "${PORT:-7860}:7860"
+      - "8009:8000"
+    restart: unless-stopped
+
+  nextjs-ui:
+    build:
+      context: ./nemotron-ocr-v2-nextjs-demo
+      dockerfile: Dockerfile
+    environment:
+      - API_URL=http://nemotron-ocr-api:8000/layout-parsing
+      - PORT=3000
+    volumes:
+      - ./paddle-ocr-1-6-demo/PaddleOCR-VL-1.6_Online_Demo/examples:/app/examples:ro
+      - ./paddle-ocr-1-6-demo/PaddleOCR-VL-1.6_Online_Demo/examples:/app/public/examples:ro
+    ports:
+      - "${PORT:-7877}:3000"
+    depends_on:
+      - nemotron-ocr-api
     restart: unless-stopped
