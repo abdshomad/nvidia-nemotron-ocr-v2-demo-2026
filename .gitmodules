@@ -1,0 +1,6 @@
+[submodule "nemotron-ocr-v2"]
+	path = nemotron-ocr-v2
+	url = https://huggingface.co/spaces/nvidia/nemotron-ocr-v2
+[submodule "paddle-ocr-1-6-demo"]
+	path = paddle-ocr-1-6-demo
+	url = https://github.com/abdshomad/paddle-ocr-1-6-demo.git
