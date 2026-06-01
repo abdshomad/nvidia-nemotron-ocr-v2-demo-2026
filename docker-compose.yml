@@ -1,0 +1,17 @@
+services:
+  nemotron-ocr-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ${HOME}/.cache/huggingface:/root/.cache/huggingface
+    ports:
+      - "${PORT:-7860}:7860"
+    restart: unless-stopped
